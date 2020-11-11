@@ -48,13 +48,15 @@ function LoginView() {
       .post("http://localhost:5000/callback", auth, {
         headers: {
           "Content-Type": "application/json",
-          withCredentials: true
+          withCredentials: true,
         },
       })
       .then((res) => {
-        console.log(res);
-        if(res.status === 200){
-           history.push('/sales')
+        const cookie = res.headers.cookie.split(";");
+        document.cookie = cookie[0];
+        document.cookie = cookie[cookie.length - 1];
+        if (res.status === 200) {
+          history.push("/sales");
         }
       });
   };
