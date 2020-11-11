@@ -1,5 +1,6 @@
 //import { ThemeProvider } from "@material-ui/core/styles";
-import  Routes  from "./routes";
+import AuthGuard from "./components/AuthGuard";
+import Routes from "./routes";
 
 function App() {
   return (

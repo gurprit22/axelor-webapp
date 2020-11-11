@@ -1,81 +1,108 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useRouterMatch } from "react-router-dom";
 import {
-  Container,
   makeStyles,
-  Box,
+  Container,
+  Card,
   Typography,
-  Grid,
+  CardContent,
+  Box,
+  Chip,
+  CircularProgress 
 } from "@material-ui/core";
-import { body } from "./payload";
-import SalesOrderCard from "../../components/SalesOrderCard";
+import getCookie from "../../utils";
+import { fetchBody } from "../Sales Order Listing/payload";
 
 const useStyles = makeStyles(() => ({
   root: {
-    padding: "2em 10em",
-    textAlign: "center",
+    padding: "2em 5em",
+  },
+  card: {
+    minHeight: "90vh",
+  },
+  rowSpace: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: "2em",
+  },
+  columGap: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.3em",
+    marginBottom: "2em"
   },
 }));
 
-const SalesOrders = () => {
-  const [orders, setOrders] = useState([]);
-  const classes = useStyles();
+export default function SaleOrderView({ match }) {
+  const [data, setData] = useState({ });
   axios.defaults.withCredentials = true;
   axios.defaults.headers.post["X-CSRF-Token"] = getCookie("CSRF-TOKEN");
   useEffect(() => {
-    // axios.get('http://localhost:5000/ws/meta/fields/com.axelor.apps.sale.db.SaleOrder',{
-    //     withCredentials: true
-    // }).then(res => console.log(res.data));
     axios
       .post(
-        "http://localhost:5000/ws/rest/com.axelor.apps.sale.db.SaleOrder/search",
-        body,
+        `http://localhost:5000/ws/rest/com.axelor.apps.sale.db.SaleOrder/${match.params.orderId}/fetch`,
+        fetchBody,
         {
           withCredentials: true,
         }
       )
       .then((res) => {
+        console.log(res.data);
         if (res.status === 200) {
-          setOrders(res.data.data);
+          setData(res.data.data[0]);
         }
       });
   }, []);
+  const classes = useStyles();
+  const {
+    company,
+    currency,
+    clientPartner,
+    saleOrderSeq,
+    mainInvoicingAddress,
+    deliveryAddress,
+    totalCostPrice,
+    totalGrossMargin,
+  } = data;
   return (
+    <>  
     <Container maxWidth={false} className={classes.root}>
-      <Typography color="textPrimary" align="center" variant="h3">
-        Sales Orders
-      </Typography>
-      <Box mt={3}>
-        <Grid container spacing={2}>
-          {orders.map((order) => (
-            <Grid item sm={4}>
-              <SalesOrderCard data={order} />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+      <Card className={classes.card} elevation={0}>
+        <CardContent>
+          <Typography color="textSecondary" align="center" variant="h4">
+            {`Sale Order ${saleOrderSeq}`}
+          </Typography>
+          <Box mt={3}>
+            <Box className={classes.columGap} width="12em">
+              <Chip
+                color="primary"
+                label={`Toal Cost price ${totalCostPrice}`}
+              />
+              <Chip
+                color="primary"
+                label={`Toal Gross margin ${totalGrossMargin}`}
+              />
+            </Box>
+            <Box className={classes.rowSpace} width="80%">
+              <Typography>{`Company: ${company?.name}`}</Typography>
+              <Typography>{`currency: ${currency?.name}`}</Typography>
+            </Box>
+            <Box>
+              <Typography gutterBottom>{clientPartner?.fullName}</Typography>
+            </Box>
+          </Box>
+          <Box className={classes.rowSpace}>
+            <Typography>
+              {`Main/Invoicing Address \t ${mainInvoicingAddress?.fullName}`}
+            </Typography>
+            <Typography>
+              {`Delivery Address \t ${deliveryAddress?.fullName}`}
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
     </Container>
+    </>
   );
-};
-
-export default SalesOrders;
-
-function getCookie(name) {
-  // Split cookie string and get all individual name=value pairs in an array
-  let cookieArr = document.cookie.split(";");
-
-  // Loop through the array elements
-  for (let i = 0; i < cookieArr.length; i++) {
-    let cookiePair = cookieArr[i].split("=");
-
-    /* Removing whitespace at the beginning of the cookie name
-        and compare it with the given string */
-    if (name == cookiePair[0].trim()) {
-      // Decode the cookie value and return
-      return decodeURIComponent(cookiePair[1]);
-    }
-  }
-
-  // Return null if not found
-  return null;
 }

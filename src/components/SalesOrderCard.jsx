@@ -1,3 +1,4 @@
+import { useHistory, useRouteMatch } from "react-router-dom";
 import {
   makeStyles,
   Card,
@@ -10,6 +11,10 @@ import {
 const useStyles = makeStyles(() => ({
   root: {
     width: "100%",
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: "#C0C0C0",
+    },
   },
   flexColumn: {
     display: "flex",
@@ -20,6 +25,8 @@ const useStyles = makeStyles(() => ({
 
 export default function SalesOrderCard({ data }) {
   const classes = useStyles();
+  const history = useHistory();
+  const match = useRouteMatch();
   const {
     saleOrderSeq,
     orderDate,
@@ -27,8 +34,11 @@ export default function SalesOrderCard({ data }) {
     inTaxTotal,
     stockLocation,
   } = data;
+  const handleClick = () => {
+    history.push(`${match.path}/${data.id}`);
+  };
   return (
-    <Card className={classes.Card} elevation={3}>
+    <Card className={classes.root} elevation={3} onClick={handleClick}>
       <CardContent>
         <Box display="flex" justifyContent="space-between">
           <Typography gutterBottom>{saleOrderSeq}</Typography>
@@ -44,8 +54,8 @@ export default function SalesOrderCard({ data }) {
             <Chip label="Axelor" color="primary" />
           </Box>
           <Box className={classes.flexColumn}>
-            <Typography>{`WT :${exTaxTotal}`}</Typography>
-            <Typography>{`ATI :${inTaxTotal}`}</Typography>
+            <Typography>{`WT :${exTaxTotal} ${data["currency.symbol"]}`}</Typography>
+            <Typography>{`ATI :${inTaxTotal} ${data["currency.symbol"]}`}</Typography>
           </Box>
         </Box>
         <Typography>{stockLocation.name}</Typography>
