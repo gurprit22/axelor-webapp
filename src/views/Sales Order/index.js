@@ -17,10 +17,10 @@ const SalesOrders = () => {
     // axios.get('http://localhost:5000/ws/meta/fields/com.axelor.apps.sale.db.SaleOrder',{
     //     withCredentials: true
     // }).then(res => console.log(res.data));  
-    axios.post('http://localhost:5000/ws/rest/com.axelor.apps.sale.db.SaleOrder/search',body,{
-        withCredentials: true,
-        csrfCookieName: 'CSRF-TOKEN'
-    }).then(res => console.log(res.data));
+    // axios.post('http://localhost:5000/ws/rest/com.axelor.apps.sale.db.SaleOrder/search',body,{
+    //     withCredentials: true,
+    //     xsrfCookieName: 'CSRF-TOKEN'
+    // }).then(res => console.log(res.data));
   }, [])
   return (
     <Container maxWidth={false} className={classes.root}>

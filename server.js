@@ -1,24 +1,27 @@
 const express = require("express");
 const { createProxyMiddleware } = require("http-proxy-middleware");
-const cors = require('cors');
+const cors = require("cors");
 
 const host = "localhost";
-let   port = 5000;
+let port = 5000;
 
 function startApp() {
-  var app = express();
-  app.use(cors());
-
+  const app = express();
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
   app.use(
     "/*",
     createProxyMiddleware({
       target: "http://sos.axelor.com:8080/",
       changeOrigin: true,
       pathRewrite: function (path) {
-       return  `/axelor-portal${path}`;
+        return `/axelor-portal${path}`;
       },
       onProxyRes(proxyRes) {
-        proxyRes.headers['Access-Control-Allow-Origin'] = '*';  
         if (proxyRes.headers["set-cookie"]) {
           const cookie = proxyRes.headers["set-cookie"];
           const getCookie = (str) => {
@@ -34,6 +37,9 @@ function startApp() {
             ? cookie.map(getCookie)
             : getCookie(cookie);
         }
+        proxyRes.headers["Access-Control-Allow-Credentials"] = true;
+        proxyRes.headers["Access-Control-Expose-Headers"] = "set-cookie, date";
+
       },
     })
   );

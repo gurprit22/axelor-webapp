@@ -44,17 +44,15 @@ function LoginView() {
   };
 
   const handleSubmit = () => {
-    // const data = new FormData();
-    // data.append("username", auth.username);
-    // data.append("password", auth.password);
     axios
       .post("http://localhost:5000/callback", auth, {
         headers: {
           "Content-Type": "application/json",
+          withCredentials: true
         },
       })
       .then((res) => {
-        console.log(res.headers);
+        console.log(res);
         if(res.status === 200){
            history.push('/sales')
         }
