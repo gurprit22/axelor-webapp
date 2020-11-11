@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from 'axios';
-
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 import {
   makeStyles,
   Container,
@@ -15,7 +15,6 @@ import {
 const useStyles = makeStyles(() => ({
   root: {
     maxWidth: 400,
-    backgroundColor: "#dadada",
   },
   container: {
     padding: "2em 4em",
@@ -33,6 +32,7 @@ const useStyles = makeStyles(() => ({
 
 function LoginView() {
   const classes = useStyles();
+  const history = useHistory();
   const [auth, setAuth] = useState({
     username: "",
     password: "",
@@ -46,19 +46,24 @@ function LoginView() {
   const handleSubmit = () => {
     // const data = new FormData();
     // data.append("username", auth.username);
-    // data.append("password", auth.password);  
-    axios.post('http://localhost:5000/callback',auth,{
+    // data.append("password", auth.password);
+    axios
+      .post("http://localhost:5000/callback", auth, {
         headers: {
-            "Content-Type": "application/json"
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(res.headers);
+        if(res.status === 200){
+           history.push('/sales')
         }
-    }).then(res => {
-        console.log(res.data);
-    });
+      });
   };
 
   return (
     <Container maxWidth="sm" className={classes.container}>
-      <Card className={classes.root}>
+      <Card className={classes.root} elevation={3}>
         <CardHeader title="Aexlor Login" />
         <CardContent>
           <Box className={classes.fieldContainer}>
