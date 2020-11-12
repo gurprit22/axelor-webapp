@@ -12,7 +12,6 @@ import {
   CardContent,
   Button,
 } from "@material-ui/core";
-import { getCurrency } from "../../Redux/actions/formData/actions";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -34,7 +33,6 @@ const useStyles = makeStyles(() => ({
 
 function LoginView() {
   const classes = useStyles();
-  const dispatch = useDispatch();
   const history = useHistory();
   const [auth, setAuth] = useState({
     username: "",
@@ -59,7 +57,7 @@ function LoginView() {
         document.cookie = cookie[0];
         document.cookie = cookie[cookie.length - 1];
         if (res.status === 200) {
-          // dispatch(getCurrency());
+          //dispatch(getCurrency());
           history.push("/sales");
         }
       });

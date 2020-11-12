@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import getCookie from "../../utils";
 import { fetchBody } from "../Sales Order Listing/payload";
-import { getCurrency } from "../../Redux/actions/formData/actions";
+
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -37,7 +37,6 @@ const useStyles = makeStyles(() => ({
 
 export default function SaleOrderView({ match }) {
   const [data, setData] = useState({ });
-  const dispatch = useDispatch();
   axios.defaults.withCredentials = true;
   axios.defaults.headers.post["X-CSRF-Token"] = getCookie("CSRF-TOKEN");
   useEffect(() => {
@@ -50,12 +49,10 @@ export default function SaleOrderView({ match }) {
         }
       )
       .then((res) => {
-        console.log(res.data);
         if (res.status === 200) {
           setData(res.data.data[0]);
         }
       });
-      dispatch(getCurrency());
   }, []);
   const classes = useStyles();
   const {
@@ -80,11 +77,11 @@ export default function SaleOrderView({ match }) {
             <Box className={classes.columGap} width="12em">
               <Chip
                 color="primary"
-                label={`Toal Cost price ${totalCostPrice} ${currency.symbol}`}
+                label={`Toal Cost price ${totalCostPrice} ${currency?.symbol}`}
               />
               <Chip
                 color="primary"
-                label={`Toal Gross margin ${totalGrossMargin} ${currency.symbol}`}
+                label={`Toal Gross margin ${totalGrossMargin} ${currency?.symbol}`}
               />
             </Box>
             <Box className={classes.rowSpace} width="80%">

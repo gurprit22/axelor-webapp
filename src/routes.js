@@ -4,6 +4,7 @@ import LoginView from "./views/auth";
 import SaleOrderView from "./views/Sales Order";
 import SalesOrders from "./views/Sales Order Listing";
 import getCookie from "./utils";
+import CreateSaleOrder from "./views/Sales Order/createSaleOrder";
 
 const Routes = () => (
   <Switch>
@@ -21,7 +22,8 @@ const Routes = () => (
     <Route exact path="/login" component={LoginView} />
     <AuthGuard>
       <Route exact path="/sales" component={SalesOrders} />
-      <Route exact path="/sales/:orderId" component={SaleOrderView} />
+      <Route exact path="/sales/view/:orderId" component={SaleOrderView} />
+      <Route exact path="/sales/create" component={CreateSaleOrder} />
     </AuthGuard>
   </Switch>
 );

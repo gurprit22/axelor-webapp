@@ -1,7 +1,8 @@
-import { takeLatest, call, all } from "redux-saga/effects";
+import { takeLatest, call, all, put } from "redux-saga/effects";
 import axios from "axios";
 import getCookie from "../../utils";
 import { formDataActionTypes } from "../actions/formData/action.types";
+import { getCurrencySuccess } from "../actions/formData/actions";
 
 axios.defaults.withCredentials = true;
 axios.defaults.headers.post["X-CSRF-Token"] = getCookie("CSRF-TOKEN");
@@ -21,7 +22,9 @@ function* onGetCurrency() {
       `${BASE_URL}ws/rest/com.axelor.apps.base.db.Currency/search`,
       body
     );
-    console.log(res.data);
+    if(res.status === 200){
+        yield put(getCurrencySuccess(res.data.data));
+    }
   } catch (err) {
     console.error(err);
   }

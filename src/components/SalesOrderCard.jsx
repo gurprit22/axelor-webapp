@@ -35,7 +35,7 @@ export default function SalesOrderCard({ data }) {
     stockLocation,
   } = data;
   const handleClick = () => {
-    history.push(`${match.path}/${data.id}`);
+    history.push(`${match.path}/view/${data.id}`);
   };
   return (
     <Card className={classes.root} elevation={3} onClick={handleClick}>
