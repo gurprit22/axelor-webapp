@@ -36,11 +36,15 @@ const SalesOrders = () => {
         }
       )
       .then((res) => {
-        console.log(res.data); 
         if (res.status === 200) {
           setOrders(res.data.data);
         }
       });
+    axios.get("http://localhost:5000//ws/meta/fields/com.axelor.apps.sale.db.SaleOrder").then(res => {
+      //console.log(res.data);
+      const required = res.data.data.fields.filter(field => field.required === true);
+      console.log(required);
+    })  
   }, []);
   return (
     <Container maxWidth={false} className={classes.root}>
