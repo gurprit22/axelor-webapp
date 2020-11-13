@@ -56,7 +56,7 @@ export default function CreateSaleOrder() {
 
     const res = await axios.post(`http://localhost:5000/ws/action`,body);
     if(res.status === 200){
-      alert("Order Placed");
+      alert("Order Confirmed");
     }
   };
   return (
@@ -84,6 +84,7 @@ export default function CreateSaleOrder() {
       validationSchema={Yup.object().shape({
         deliveryAddressStr: Yup.string().required("Required"),
         mainInvoicingAddressStr: Yup.string().required("Required"),
+        saleOrderTypeSelect: Yup.number().required("Required"),
       })}
       onSubmit={(values) => {
         //console.log(values);
@@ -136,6 +137,14 @@ export default function CreateSaleOrder() {
                       InputLabelProps={{ shrink: true }}
                       name="saleOrderTypeSelect"
                       value={values.saleOrderTypeSelect}
+                      error={Boolean(
+                        touched.saleOrderTypeSelect &&
+                          errors.saleOrderTypeSelect
+                      )}
+                      helperText={
+                        touched.saleOrderTypeSelect &&
+                        errors.saleOrderTypeSelect
+                      }
                     >
                       <MenuItem value={1}>Standard</MenuItem>
                       <MenuItem value={2}>Subscription</MenuItem>
