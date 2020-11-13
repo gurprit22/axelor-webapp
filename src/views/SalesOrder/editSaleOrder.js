@@ -16,7 +16,7 @@ import {
 import { FormDataContext } from "../../contexts/FormContext/index";
 import getCookie from "../../utils";
 import { BASE_URL } from "../../constants";
-import { fetchBody } from "../Sales Order Listing/payload";
+import { fetchBody } from "../SalesOrderListing/payload";
 
 const useStyles = makeStyles(() => ({
   root: {

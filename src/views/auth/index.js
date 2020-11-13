@@ -11,6 +11,7 @@ import {
   CardContent,
   Button,
 } from "@material-ui/core";
+import { AuthApi } from "../../api/auth";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -44,22 +45,33 @@ function LoginView() {
   };
 
   const handleSubmit = () => {
-    axios
-      .post("http://localhost:5000/callback", auth, {
-        headers: {
-          "Content-Type": "application/json",
-          withCredentials: true,
-        },
-      })
-      .then((res) => {
+    
+    AuthApi.login(auth).then(res => {
+      if(res.status === 200){
         const cookie = res.headers.cookie.split(";");
         document.cookie = cookie[0];
-        document.cookie = cookie[cookie.length - 1];
-        if (res.status === 200) {
-          //dispatch(getCurrency());
-          history.push("/sales");
-        }
-      });
+        document.cookie = cookie[cookie.length -1];
+          
+        history.push("/sales");
+      }
+    });
+    
+    // axios
+    //   .post("http://localhost:5000/callback", auth, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       withCredentials: true,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     const cookie = res.headers.cookie.split(";");
+    //     document.cookie = cookie[0];
+    //     document.cookie = cookie[cookie.length - 1];
+    //     if (res.status === 200) {
+    //       //dispatch(getCurrency());
+    //       history.push("/sales");
+    //     }
+    //   });
   };
 
   return (

@@ -12,6 +12,7 @@ import {
 import { body } from "./payload";
 import SalesOrderCard from "../../components/SalesOrderCard";
 import getCookie from "../../utils";
+import { SaleOrderApi } from "../../api/saleOrder";
 
 
 const useStyles = makeStyles(() => ({
@@ -28,19 +29,24 @@ const SalesOrders = () => {
   axios.defaults.withCredentials = true;
   axios.defaults.headers.post["X-CSRF-Token"] = getCookie("CSRF-TOKEN");
   useEffect(() => {
-    axios
-      .post(
-        "http://localhost:5000/ws/rest/com.axelor.apps.sale.db.SaleOrder/search",
-        body,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          setOrders(res.data.data);
-        }
-      });
+    SaleOrderApi.getOrders(body).then(res => {
+      if(res.status === 200){
+        setOrders(res.data.data);
+      }
+    })
+    // axios
+    //   .post(
+    //     "http://localhost:5000/ws/rest/com.axelor.apps.sale.db.SaleOrder/search",
+    //     body,
+    //     {
+    //       withCredentials: true,
+    //     }
+    //   )
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       setOrders(res.data.data);
+    //     }
+    //   });
     axios
       .get(
         "http://localhost:5000//ws/meta/fields/com.axelor.apps.sale.db.SaleOrder"

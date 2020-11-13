@@ -1,12 +1,12 @@
 import { Switch, Route, Redirect } from "react-router-dom";
 import AuthGuard from "./components/AuthGuard";
 import LoginView from "./views/auth";
-import SaleOrderView from "./views/Sales Order";
-import SalesOrders from "./views/Sales Order Listing";
+import SaleOrderView from "./views/SalesOrder";
+import SalesOrders from "./views/SalesOrderListing";
 import getCookie from "./utils";
-import CreateSaleOrder from "./views/Sales Order/createSaleOrder";
+import CreateSaleOrder from "./views/SalesOrder/createSaleOrder";
 import { FormDataProvider } from "./contexts/FormContext";
-import EditSaleOrder from "./views/Sales Order/editSaleOrder";
+import EditSaleOrder from "./views/SalesOrder/editSaleOrder";
 
 const Routes = () => (
   <Switch>

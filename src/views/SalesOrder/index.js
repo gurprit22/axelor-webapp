@@ -14,7 +14,8 @@ import {
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import getCookie from "../../utils";
-import { fetchBody } from "../Sales Order Listing/payload";
+import { fetchBody } from "../SalesOrderListing/payload";
+import { SaleOrderApi } from "../../api/saleOrder";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles(() => ({
   },
   link: {
     textDecoration: "none",
-  }
+  },
 }));
 
 export default function SaleOrderView({ match }) {
@@ -46,19 +47,27 @@ export default function SaleOrderView({ match }) {
   axios.defaults.headers.post["X-CSRF-Token"] = getCookie("CSRF-TOKEN");
   const orderId = match.params.orderId;
   useEffect(() => {
-    axios
-      .post(
-        `http://localhost:5000/ws/rest/com.axelor.apps.sale.db.SaleOrder/${orderId}/fetch`,
-        fetchBody,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          setData(res.data.data[0]);
-        }
-      });
+    SaleOrderApi.fetchOrder(orderId, fetchBody).then((res) => {
+      if (res.status === 200) {
+        setData(res.data.data[0]);
+      } else {
+        // show error notification or some fallback
+      }
+    });
+
+    // axios
+    //   .post(
+    //     `http://localhost:5000/ws/rest/com.axelor.apps.sale.db.SaleOrder/${orderId}/fetch`,
+    //     fetchBody,
+    //     {
+    //       withCredentials: true,
+    //     }
+    //   )
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       setData(res.data.data[0]);
+    //     }
+    //   });
   }, []);
   const classes = useStyles();
   const {
