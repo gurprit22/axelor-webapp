@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import {
   makeStyles,
   Container,
@@ -9,11 +8,10 @@ import {
   CardContent,
   Box,
   Chip,
-  CircularProgress 
+  CircularProgress,
 } from "@material-ui/core";
 import getCookie from "../../utils";
 import { fetchBody } from "../Sales Order Listing/payload";
-
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -31,12 +29,12 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     flexDirection: "column",
     gap: "0.3em",
-    marginBottom: "2em"
+    marginBottom: "2em",
   },
 }));
 
 export default function SaleOrderView({ match }) {
-  const [data, setData] = useState({ });
+  const [data, setData] = useState({});
   axios.defaults.withCredentials = true;
   axios.defaults.headers.post["X-CSRF-Token"] = getCookie("CSRF-TOKEN");
   useEffect(() => {
@@ -53,7 +51,7 @@ export default function SaleOrderView({ match }) {
           setData(res.data.data[0]);
         }
       });
-  }, []);
+  }, [match.params.orderId]);
   const classes = useStyles();
   const {
     company,
@@ -66,43 +64,43 @@ export default function SaleOrderView({ match }) {
     totalGrossMargin,
   } = data;
   return (
-    <>  
-    <Container maxWidth={false} className={classes.root}>
-      <Card className={classes.card} elevation={0}>
-        <CardContent>
-          <Typography color="textSecondary" align="center" variant="h4">
-            {`Sale Order ${saleOrderSeq}`}
-          </Typography>
-          <Box mt={3}>
-            <Box className={classes.columGap} width="12em">
-              <Chip
-                color="primary"
-                label={`Toal Cost price ${totalCostPrice} ${currency?.symbol}`}
-              />
-              <Chip
-                color="primary"
-                label={`Toal Gross margin ${totalGrossMargin} ${currency?.symbol}`}
-              />
-            </Box>
-            <Box className={classes.rowSpace} width="80%">
-              <Typography>{`Company: ${company?.name}`}</Typography>
-              <Typography>{`currency: ${currency?.name}`}</Typography>
-            </Box>
-            <Box>
-              <Typography gutterBottom>{clientPartner?.fullName}</Typography>
-            </Box>
-          </Box>
-          <Box className={classes.rowSpace}>
-            <Typography>
-              {`Main/Invoicing Address:  ${mainInvoicingAddress?.fullName}`}
+    <>
+      <Container maxWidth={false} className={classes.root}>
+        <Card className={classes.card} elevation={0}>
+          <CardContent>
+            <Typography color="textSecondary" align="center" variant="h4">
+              {`Sale Order ${saleOrderSeq}`}
             </Typography>
-            <Typography>
-              {`Delivery Address:  ${deliveryAddress?.fullName}`}
-            </Typography>
-          </Box>
-        </CardContent>
-      </Card>
-    </Container>
+            <Box mt={3}>
+              <Box className={classes.columGap} width="12em">
+                <Chip
+                  color="primary"
+                  label={`Toal Cost price ${totalCostPrice} ${currency?.symbol}`}
+                />
+                <Chip
+                  color="primary"
+                  label={`Toal Gross margin ${totalGrossMargin} ${currency?.symbol}`}
+                />
+              </Box>
+              <Box className={classes.rowSpace} width="80%">
+                <Typography>{`Company: ${company?.name}`}</Typography>
+                <Typography>{`currency: ${currency?.name}`}</Typography>
+              </Box>
+              <Box>
+                <Typography gutterBottom>{clientPartner?.fullName}</Typography>
+              </Box>
+            </Box>
+            <Box className={classes.rowSpace}>
+              <Typography>
+                {`Main/Invoicing Address:  ${mainInvoicingAddress?.fullName}`}
+              </Typography>
+              <Typography>
+                {`Delivery Address:  ${deliveryAddress?.fullName}`}
+              </Typography>
+            </Box>
+          </CardContent>
+        </Card>
+      </Container>
     </>
   );
 }

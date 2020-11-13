@@ -33,12 +33,12 @@ function startApp() {
               })
               .join(";");
           };
-          proxyRes.headers["set-cookie"] = Array.isArray(cookie)
+          proxyRes.headers["cookie"] = Array.isArray(cookie)
             ? cookie.map(getCookie)
             : getCookie(cookie);
         }
         proxyRes.headers["Access-Control-Allow-Credentials"] = true;
-        proxyRes.headers["Access-Control-Expose-Headers"] = "set-cookie, date";
+        proxyRes.headers["Access-Control-Expose-Headers"] = "cookie, date";
 
       },
     })
@@ -50,3 +50,20 @@ function startApp() {
 }
 
 startApp();
+
+
+/* 
+API calls 
+1. list of customers 'http://sos.axelor.com:8080/axelor-portal/ws/rest/com.axelor.apps.base.db.Partner/search'
+2. customer contact 'http://sos.axelor.com:8080/axelor-portal/ws/rest/com.axelor.apps.base.db.Partner/search'
+3. currency list 'http://sos.axelor.com:8080/axelor-portal/ws/rest/com.axelor.apps.base.db.Currency/search'
+4. Action API 'http://sos.axelor.com:8080/axelor-portal/ws/action'
+5. API to get Products 'http://sos.axelor.com:8080/axelor-portal/ws/rest/com.axelor.apps.base.db.Product/search' 
+6. API to get unit 'http://sos.axelor.com:8080/axelor-portal/ws/rest/com.axelor.apps.base.db.Unit/search'
+ 
+  com.axelor.apps.sale.db.SaleOrder
+
+
+  {code: "AXE", name: "Axelor", currency: {code: "EUR", name: "Euro", id: 46}, id: 1}
+  
+*/

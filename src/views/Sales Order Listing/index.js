@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import axios from "axios";
 import {
   Container,
@@ -13,7 +12,7 @@ import {
 import { body } from "./payload";
 import SalesOrderCard from "../../components/SalesOrderCard";
 import getCookie from "../../utils";
-import { getCurrency } from "../../Redux/actions/formData/actions";
+
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -25,7 +24,6 @@ const useStyles = makeStyles(() => ({
 const SalesOrders = () => {
   const [orders, setOrders] = useState([]);
   const history = useHistory();
-  const dispatch = useDispatch();
   const classes = useStyles();
   axios.defaults.withCredentials = true;
   axios.defaults.headers.post["X-CSRF-Token"] = getCookie("CSRF-TOKEN");
@@ -43,17 +41,14 @@ const SalesOrders = () => {
           setOrders(res.data.data);
         }
       });
-    dispatch(getCurrency());
     axios
       .get(
         "http://localhost:5000//ws/meta/fields/com.axelor.apps.sale.db.SaleOrder"
       )
       .then((res) => {
-        console.log(res.data);
         const required = res.data.data.fields.filter(
           (field) => field.required === true
         );
-        console.log(required);
       });
   }, []);
   return (
