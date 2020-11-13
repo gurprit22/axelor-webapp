@@ -21,7 +21,17 @@ const Routes = () => (
         )
       }
     />
-    <Route exact path="/login" component={LoginView} />
+    <Route
+      exact
+      path="/login"
+      render={(props) =>
+        getCookie("JSESSIONID") ? (
+          <Redirect to="/sales" />
+        ) : (
+          <LoginView {...props} />
+        )
+      }
+    />
     <FormDataProvider>
       <AuthGuard>
         <Route exact path="/sales" component={SalesOrders} />
