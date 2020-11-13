@@ -6,10 +6,11 @@ import { BASE_URL } from "../../constants/index";
 
 export const FormDataContext = createContext({
   currency: [],
+  customers: [],
 });
 
 export const FormDataProvider = ({ children }) => {
-  const [currency, setCurrency] = useState();
+  const [currency, setCurrency] = useState([]);
 
   axios.defaults.withCredentials = true;
   axios.defaults.headers.post["X-CSRF-Token"] = getCookie("CSRF-TOKEN");
@@ -25,7 +26,6 @@ export const FormDataProvider = ({ children }) => {
         setCurrency(res.data.data);
       }
     }
-
     getCurrency();
   }, []);
 
