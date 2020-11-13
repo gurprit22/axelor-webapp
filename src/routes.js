@@ -6,6 +6,7 @@ import SalesOrders from "./views/Sales Order Listing";
 import getCookie from "./utils";
 import CreateSaleOrder from "./views/Sales Order/createSaleOrder";
 import { FormDataProvider } from "./contexts/FormContext";
+import EditSaleOrder from "./views/Sales Order/editSaleOrder";
 
 const Routes = () => (
   <Switch>
@@ -26,6 +27,7 @@ const Routes = () => (
         <Route exact path="/sales" component={SalesOrders} />
         <Route exact path="/sales/view/:orderId" component={SaleOrderView} />
         <Route exact path="/sales/create" component={CreateSaleOrder} />
+        <Route exact path="/sales/edit/:id" component={EditSaleOrder} />
       </AuthGuard>
     </FormDataProvider>
   </Switch>

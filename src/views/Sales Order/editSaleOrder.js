@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -15,6 +15,8 @@ import {
 } from "@material-ui/core";
 import { FormDataContext } from "../../contexts/FormContext/index";
 import getCookie from "../../utils";
+import { BASE_URL } from "../../constants";
+import { fetchBody } from "../Sales Order Listing/payload";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -25,12 +27,26 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function CreateSaleOrder() {
+export default function EditSaleOrder({ match }) {
   const classes = useStyles();
+  const [order, setOrder] = useState({});
   const { currency } = useContext(FormDataContext);
   axios.defaults.withCredentials = true;
   axios.defaults.headers.post["X-CSRF-Token"] = getCookie("CSRF-TOKEN");
 
+  useEffect(() => {
+    async function getOrderData() {
+      const res = await axios.post(
+        `${BASE_URL}ws/rest/com.axelor.apps.sale.db.SaleOrder/${match.params.id}/fetch`,
+        fetchBody
+      );
+      console.log(res);
+      if (res.status === 200) {
+        setOrder(res.data.data[0]);
+      }
+    }
+    getOrderData();
+  }, []);
   const handleCreateOrder = async (values) => {
     const body = {
       action: "save,action-sale-group-confirmed",
@@ -48,39 +64,33 @@ export default function CreateSaleOrder() {
             code: "GRL",
             id: 4,
             name: "General",
-          }
+          },
         },
       },
     };
 
-
-    const res = await axios.post(`http://localhost:5000/ws/action`,body);
-    if(res.status === 200){
+    const res = await axios.post(`http://localhost:5000/ws/action`, body);
+    if (res.status === 200) {
       alert("Order Confirmed");
     }else{
-      alert("Something went wrong");
+      alert("Something went wrong!");
     }
   };
   return (
     <Formik
       enableReinitialize
       initialValues={{
-        currency: "",
-        creationDate: new Date().toISOString().slice(0, 10),
-        deliveryAddressStr: "",
-        mainInvoicingAddressStr: "",
-        team: { code: "GRL", name: "General", id: 4 },
-        saleOrderTypeSelect: "",
-        company: {
+        currency: order?.currency?.id || "",
+        creationDate: order?.creationDate || new Date().toISOString().slice(0, 10),
+        deliveryAddressStr: order?.deliveryAddressStr || "",
+        mainInvoicingAddressStr: order?.mainInvoicingAddressStr || "",
+        team: order?.team || { code: "GRL", name: "General", id: 4 },
+        saleOrderTypeSelect: order?.saleOrderTypeSelect || "",
+        company: order?.company || {
           code: "AXE",
           name: "Axelor",
           currency: { code: "EUR", name: "Euro", id: 46 },
           id: 1,
-        },
-        team: {
-          code: "GRL",
-          name: "General",
-          id: 4,
         },
       }}
       validationSchema={Yup.object().shape({
@@ -89,8 +99,9 @@ export default function CreateSaleOrder() {
         saleOrderTypeSelect: Yup.number().required("Required"),
       })}
       onSubmit={(values) => {
+        values.currency = currency.find(c => c.id === values.currency);
         //console.log(values);
-        handleCreateOrder(values); 
+        handleCreateOrder(values);
       }}
     >
       {({
@@ -122,7 +133,7 @@ export default function CreateSaleOrder() {
                       value={values.currency}
                     >
                       {currency.map((c) => (
-                        <MenuItem value={c} key={c.code}>
+                        <MenuItem value={c.id} key={c.code}>
                           {c.name}
                         </MenuItem>
                       ))}

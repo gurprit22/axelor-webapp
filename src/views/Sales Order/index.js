@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useHistory, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   makeStyles,
@@ -9,7 +10,9 @@ import {
   Box,
   Chip,
   CircularProgress,
+  Button,
 } from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
 import getCookie from "../../utils";
 import { fetchBody } from "../Sales Order Listing/payload";
 
@@ -31,16 +34,21 @@ const useStyles = makeStyles(() => ({
     gap: "0.3em",
     marginBottom: "2em",
   },
+  link: {
+    textDecoration: "none",
+  }
 }));
 
 export default function SaleOrderView({ match }) {
   const [data, setData] = useState({});
+  const history = useHistory();
   axios.defaults.withCredentials = true;
   axios.defaults.headers.post["X-CSRF-Token"] = getCookie("CSRF-TOKEN");
+  const orderId = match.params.orderId;
   useEffect(() => {
     axios
       .post(
-        `http://localhost:5000/ws/rest/com.axelor.apps.sale.db.SaleOrder/${match.params.orderId}/fetch`,
+        `http://localhost:5000/ws/rest/com.axelor.apps.sale.db.SaleOrder/${orderId}/fetch`,
         fetchBody,
         {
           withCredentials: true,
@@ -51,7 +59,7 @@ export default function SaleOrderView({ match }) {
           setData(res.data.data[0]);
         }
       });
-  }, [match.params.orderId]);
+  }, []);
   const classes = useStyles();
   const {
     company,
@@ -72,15 +80,28 @@ export default function SaleOrderView({ match }) {
               {`Sale Order ${saleOrderSeq}`}
             </Typography>
             <Box mt={3}>
-              <Box className={classes.columGap} width="12em">
-                <Chip
-                  color="primary"
-                  label={`Toal Cost price ${totalCostPrice} ${currency?.symbol}`}
-                />
-                <Chip
-                  color="primary"
-                  label={`Toal Gross margin ${totalGrossMargin} ${currency?.symbol}`}
-                />
+              <Box className={classes.rowSpace}>
+                <Box className={classes.columGap} width="12em">
+                  <Chip
+                    color="primary"
+                    label={`Toal Cost price ${totalCostPrice} ${currency?.symbol}`}
+                  />
+                  <Chip
+                    color="primary"
+                    label={`Toal Gross margin ${totalGrossMargin} ${currency?.symbol}`}
+                  />
+                </Box>
+                <Box>
+                  <Link to={`/sales/edit/${orderId}`} className={classes.link}>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      startIcon={<EditIcon />}
+                    >
+                      Edit Order
+                    </Button>
+                  </Link>
+                </Box>
               </Box>
               <Box className={classes.rowSpace} width="80%">
                 <Typography>{`Company: ${company?.name}`}</Typography>
