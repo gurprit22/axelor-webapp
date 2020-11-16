@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import { FormDataContext } from "../../contexts/FormContext/index";
 import getCookie from "../../utils";
+import { SaleOrderApi } from "../../api/saleOrder";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -48,18 +49,18 @@ export default function CreateSaleOrder() {
             code: "GRL",
             id: 4,
             name: "General",
-          }
+          },
         },
       },
     };
 
-
-    const res = await axios.post(`http://localhost:5000/ws/action`,body);
-    if(res.status === 200){
-      alert("Order Confirmed");
-    }else{
-      alert("Something went wrong");
-    }
+    SaleOrderApi.createOrder(body).then((res) => {
+      if (res.status === 200) {
+        alert("Order Confirmed");
+      } else {
+        alert("Something went wrong");
+      }
+    });
   };
   return (
     <Formik
@@ -90,7 +91,7 @@ export default function CreateSaleOrder() {
       })}
       onSubmit={(values) => {
         //console.log(values);
-        handleCreateOrder(values); 
+        handleCreateOrder(values);
       }}
     >
       {({

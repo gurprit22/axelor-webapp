@@ -17,6 +17,7 @@ import { FormDataContext } from "../../contexts/FormContext/index";
 import getCookie from "../../utils";
 import { BASE_URL } from "../../constants";
 import { fetchBody } from "../SalesOrderListing/payload";
+import { SaleOrderApi } from "../../api/saleOrder";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -69,12 +70,15 @@ export default function EditSaleOrder({ match }) {
       },
     };
 
-    const res = await axios.post(`http://localhost:5000/ws/action`, body);
-    if (res.status === 200) {
-      alert("Order Confirmed");
-    }else{
-      alert("Something went wrong!");
-    }
+    // create, edit order endpoint is same
+    SaleOrderApi.createOrder(body).then(res => {
+      if(res.status == 200){
+        alert("order Edited");
+      }else{
+        alert("Something went wrong!");
+      }
+    })
+  
   };
   return (
     <Formik

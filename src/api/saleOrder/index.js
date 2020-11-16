@@ -36,7 +36,15 @@ SaleOrderApi.fetchOrder = async (id, body) => {
   }
 };
 
-
 SaleOrderApi.createOrder = async (body) => {
+  try {
+    axios.defaults.withCredentials = true;
+    axios.defaults.headers.post["X-CSRF-Token"] = getCookie("CSRF-TOKEN");
+
+    const res = await axios.post(`http://localhost:5000/ws/action`, body);
     
-}
+    return res ? res : null;
+  } catch (err) {
+    console.error(err);
+  }
+};
